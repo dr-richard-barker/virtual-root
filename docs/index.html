@@ -52,20 +52,20 @@
   <div class="panel">
     <h2>Controls</h2>
     <div class="ctrl">
-      <label>PIN efflux strength <b id="pinv"></b></label>
-      <input type="range" id="pin" min="1" max="40" step="1" value="20">
+      <label>PIN efflux strength (µm/s) <b id="pinv"></b></label>
+      <input type="range" id="pin" min="1" max="30" step="1" value="16">
     </div>
     <div class="ctrl">
-      <label>AUX1 influx strength (tip trap) <b id="aux1v"></b></label>
-      <input type="range" id="aux1" min="20" max="120" step="5" value="80">
+      <label>AUX1 influx strength / tip trap (µm/s) <b id="aux1v"></b></label>
+      <input type="range" id="aux1" min="20" max="80" step="2" value="42">
     </div>
     <div class="ctrl">
-      <label>QC auxin production <b id="prodqcv"></b></label>
-      <input type="range" id="prodqc" min="0" max="4" step="0.1" value="2">
+      <label>QC auxin production (µM/s) <b id="prodqcv"></b></label>
+      <input type="range" id="prodqc" min="0" max="0.06" step="0.005" value="0.025">
     </div>
     <div class="ctrl">
-      <label>Auxin decay <b id="decayv"></b></label>
-      <input type="range" id="decay" min="0.01" max="0.15" step="0.01" value="0.05">
+      <label>Auxin decay (1/s) <b id="decayv"></b></label>
+      <input type="range" id="decay" min="0.0005" max="0.005" step="0.0005" value="0.0012">
     </div>
     <label class="check"><input type="checkbox" id="gravity"> Gravitropism: bias columella PIN to the lower side</label>
     <div class="row">

@@ -23,25 +23,28 @@ plus a shoot-end source (`S`), decay (`k`), and open-boundary efflux.
 ## Status
 - **`auxin_reflux.py` (v0)** — single-compartment cell-to-cell model. Transports auxin but
   could NOT seat the QC maximum (auxin piled at boundaries). Kept as a learning artifact.
-- **`auxin_v1.py` (v1)** — ✅ **two-compartment (cell + apoplast wall) model built to SPEC.md.**
-  Reproduces the **canonical auxin maximum at the QC** (central, at the tip), with high
-  auxin in the lateral root cap and a tip-concentrated gradient. This is the validation
-  target from Grieneisen 2007 / Band 2014.
+- **`auxin_v1.py` (v1)** — ✅ two-compartment (cell + apoplast wall) model built to SPEC.md.
+  First to reproduce the **canonical auxin maximum at the QC** on a layered rectangle.
+- **`auxin_v2.py` (v2)** — ✅ **fidelity polish** and the basis for the live web app:
+  **rounded root-tip template**, a **shoot-derived auxin supply** so auxin fills the whole
+  root in a **smooth shootward gradient**, and **physical units** (Grieneisen permeabilities
+  in µm/s, 10 µm cells, time in seconds, auxin in µM). QC remains the maximum.
 
-![Virtual Root v1: auxin maximum at the QC](auxin_v1.png)
+![Virtual Root v2: rounded tip, shootward gradient, QC maximum](auxin_v2.png)
 
-### What made v1 work (vs v0)
+### What makes it work
 1. Separate cell + wall compartments with per-membrane-side influx/efflux permeabilities.
 2. The Band 2014 PIN map (rootward stele, shootward cap/epidermis, lateral-inward tip,
-   omnidirectional columella) — but the **QC kept as a low-efflux trap**, not omnidirectional.
-3. AUX1 influx (×4) in cap/columella/epidermis to trap auxin at the tip.
-4. **Elevated auxin production at the QC + columella** (the local source).
+   omnidirectional columella) — but the **QC kept as a trap**, not omnidirectional.
+3. AUX1 influx in cap/columella/epidermis to hold auxin at the tip.
+4. A **shoot supply** + small QC/columella source: the tip is the maximum, atop a gradient.
+5. Display uses a **gamma colour scale** (γ≈0.45), as auxin reporters (DR5/DII) span orders
+   of magnitude — this reveals the shootward gradient that a linear scale would hide.
 
-### Next refinements (v1 is a valid proof, not yet publication-grade)
-- Extend the shootward gradient further up the root (tune diffusion/transport balance).
-- Balance the two lateral cap streaks vs the central peak.
-- Replace the layered rectangle with a **digitised / rounded root cell template**.
-- Convert µm·s⁻¹ permeabilities to real time units and validate quantitatively.
+### Still open (optional, not publication-grade)
+- A truly *digitised* root cell template (v2 is an idealised rounded section).
+- Quantitative validation of the µM levels and timescales against DII-VENUS data.
+- Balance of the lateral cap signal vs the central peak.
 
 ## Next steps to full fidelity
 1. Extract the exact PIN/AUX1 polarity maps and parameter values from Grieneisen 2007
