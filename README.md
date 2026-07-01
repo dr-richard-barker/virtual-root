@@ -51,7 +51,7 @@ A dependency-free browser app running the v2 model, with:
 
 ### Still open (optional, not publication-grade)
 - A truly *digitised* root cell template (v2 is an idealised rounded section).
-- Quantitative validation of the µM levels and timescales against DII-VENUS data.
+- Quantitative validation against DII-VENUS / R2D2 imaging — methodology in [SPEC.md §8](SPEC.md#8-validating-the-model-against-dii-venus-for-researchers).
 - Balance of the lateral cap signal vs the central peak.
 
 ## Next steps to full fidelity

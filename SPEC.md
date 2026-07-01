@@ -138,3 +138,41 @@ layers). Reproduce Grieneisen 2007 Fig. 1–2 qualitatively before adding the UI
 2. Confirm the §6 validation target.
 3. Add interactive controls (PIN/AUX1 strength, `D`, decay, production) + PNG/data export.
 4. Ship as pure-JS on GitHub Pages (durable) and embed in AIRI Stage VII.
+
+## 8. Validating the model against DII-VENUS (for researchers)
+
+The model predicts a per-cell auxin distribution; the **DII-VENUS** biosensor lets you
+test that prediction against a living root.
+
+**What it is.** DII-VENUS ([Brunoud et al. 2012, *Nature*](https://doi.org/10.1038/nature10791))
+fuses the auxin-binding domain II (DII) of an Aux/IAA to fast-maturing VENUS. Auxin drives
+its TIR1/AFB-dependent degradation, so **fluorescence is *inversely* related to auxin** —
+bright cells = low auxin, dark cells = high auxin. It reports the auxin *input* directly and
+fast (unlike the slower transcriptional DR5 *output* reporter).
+
+**Validation workflow**
+1. **Image** the root tip by confocal microscopy. Prefer the ratiometric **R2D2**
+   ([Liao et al. 2015, *Nat. Methods*](https://doi.org/10.1038/nmeth.3279)), which adds a
+   non-degradable *mDII-tdTomato* control so an mDII/DII ratio corrects for expression level
+   and imaging depth.
+2. **Segment** cells and measure per-cell mean fluorescence.
+3. **Convert fluorescence → relative auxin.** Because the signal is inverse and non-linear,
+   invert it using the DII degradation model (auxin-dependent degradation via TIR1 binding),
+   as in [Band et al. 2012](https://doi.org/10.1073/pnas.1201498109) /
+   [2014](https://doi.org/10.1105/tpc.113.119495). R2D2 ratios give a more direct readout.
+4. **Compare cell-by-cell** with the model's steady state:
+   - Does the **maximum** sit at the QC / columella initials? *(the tool reproduces this)*
+   - Are the **shootward gradient** and the **lateral-root-cap** signal reproduced?
+   - Fit model parameters (permeabilities, production) to the measured pattern.
+5. **Dynamic test — gravitropism.** Gravistimulate and time-lapse DII-VENUS/R2D2: a lateral
+   auxin asymmetry develops on the lower side within minutes
+   ([Band et al. 2012](https://doi.org/10.1073/pnas.1201498109)). The tool's
+   **Gravistimulate** preset predicts exactly this — compare the predicted vs measured
+   lower/upper ratio *and its time course*.
+
+**Caveats.** DII-VENUS reports auxin *perception*, not transcriptional output; the signal is
+inverse and saturates; VENUS maturation time and photobleaching bias fast dynamics. Use R2D2
+for quantitative work and calibrate the fluorescence→auxin conversion for each imaging setup.
+
+**References:** Brunoud *et al.* (2012) *Nature* 482:103; Band *et al.* (2012) *PNAS* 109:4668;
+Band *et al.* (2014) *Plant Cell* 26:862; Liao *et al.* (2015) *Nature Methods* 12:207.
