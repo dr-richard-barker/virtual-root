@@ -26,6 +26,9 @@
   .row { display:flex; gap:10px; align-items:center; margin-top:6px; }
   button { background:var(--green); color:#fff; border:0; border-radius:6px; padding:8px 14px; font-size:14px; cursor:pointer; }
   button:hover { background:#256528; }
+  .presets { display:flex; flex-wrap:wrap; gap:6px; }
+  .presets button { background:#1f3a24; border:1px solid #2f5a38; padding:6px 10px; font-size:13px; }
+  .presets button:hover { background:#2a5030; }
   .check { display:flex; align-items:center; gap:8px; font-size:14px; margin:10px 0; }
   .legend { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--muted); margin-top:10px; }
   .bar { height:12px; width:140px; border-radius:3px;
@@ -50,7 +53,16 @@
   </div>
 
   <div class="panel">
-    <h2>Controls</h2>
+    <h2>Presets</h2>
+    <div class="presets">
+      <button data-preset="wt">Wild type</button>
+      <button data-preset="grav">Gravistimulate</button>
+      <button data-preset="pin2">PIN2 mutant</button>
+      <button data-preset="aux1">aux1 mutant</button>
+      <button data-preset="nodecay">No decay</button>
+    </div>
+
+    <h2 style="margin-top:18px">Controls</h2>
     <div class="ctrl">
       <label>PIN efflux strength (µm/s) <b id="pinv"></b></label>
       <input type="range" id="pin" min="1" max="30" step="1" value="16">
@@ -68,13 +80,17 @@
       <input type="range" id="decay" min="0.0005" max="0.005" step="0.0005" value="0.0012">
     </div>
     <label class="check"><input type="checkbox" id="gravity"> Gravitropism: bias columella PIN to the lower side</label>
+    <label class="check"><input type="checkbox" id="labels" checked> Show anatomy labels</label>
+    <label class="check"><input type="checkbox" id="arrows" checked> Show auxin-flux arrows</label>
     <div class="row">
       <button id="pause">Pause</button>
       <button id="reset">Reset auxin</button>
+      <button id="png">Save PNG</button>
     </div>
     <p style="color:var(--muted);font-size:12px;margin:14px 0 0">
-      Try: drop <b>AUX1</b> to lose the tip trap; raise <b>decay</b> to wash auxin away;
-      tick <b>gravitropism</b> to redistribute auxin to one side (the start of root bending).
+      Try a <b>preset</b>, then watch it converge. <b>Gravistimulate</b> to redistribute auxin
+      to the lower side (the start of root bending); <b>PIN2 mutant</b> to break the return flow;
+      <b>aux1 mutant</b> to lose the tip trap. The white arrows trace the auxin <b>reflux loop</b>.
     </p>
   </div>
 </main>

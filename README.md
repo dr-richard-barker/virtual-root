@@ -32,6 +32,14 @@ plus a shoot-end source (`S`), decay (`k`), and open-boundary efflux.
 
 ![Virtual Root v2: rounded tip, shootward gradient, QC maximum](auxin_v2.png)
 
+### Interactive web app (`docs/`, live via GitHub Pages)
+A dependency-free browser app running the v2 model, with:
+- **Anatomy labels** (stele, cortex, epidermis, columella, QC) — toggleable.
+- **Auxin-flux arrows** that trace the **reflux loop** (down the stele, up the outer layers).
+- **Presets:** Wild type · Gravistimulate · **PIN2 mutant** · **aux1 mutant** · No decay.
+- **Animated gravitropism** — auxin redistributes to the lower side, with a live bending indicator.
+- Live sliders (PIN, AUX1, QC production, decay) and **Save PNG** export.
+
 ### What makes it work
 1. Separate cell + wall compartments with per-membrane-side influx/efflux permeabilities.
 2. The Band 2014 PIN map (rootward stele, shootward cap/epidermis, lateral-inward tip,

@@ -96,12 +96,40 @@ print(f"auxin in upper stele (frac of max): top={upper[0]:.2f}, mid={upper[r_mer
 
 from matplotlib.colors import PowerNorm
 disp = np.where(active, a, np.nan)
-fig, ax = plt.subplots(figsize=(3.6, 7.6))
+fig, ax = plt.subplots(figsize=(5.6, 8.2))
 im = ax.imshow(disp, cmap="magma", origin="upper", aspect="equal",
                norm=PowerNorm(gamma=0.45, vmin=0, vmax=np.nanmax(disp)))
 ax.plot(mc, mr, "o", mfc="none", mec="lime", ms=13, mew=2)
-ax.set_title("Virtual Root v2 — rounded tip,\nshoot supply, physical units", fontsize=9)
+
+# --- flux arrows (efflux polarity x concentration), subsampled ---
+vx = (ef_rt - ef_lf) * a; vy = (ef_dn - ef_up) * a
+xs, ys, us, vs = [], [], [], []
+for r in range(2, R, 3):
+    for c in range(1, C, 2):
+        if active[r, c] and (abs(vx[r, c]) + abs(vy[r, c])) > 0.5:
+            mg = np.hypot(vx[r, c], vy[r, c]); xs.append(c); ys.append(r)
+            us.append(vx[r, c]/mg); vs.append(vy[r, c]/mg)
+ax.quiver(xs, ys, us, vs, color="white", alpha=0.55, scale=26, width=0.005, headwidth=4, pivot="mid")
+
+# --- anatomy labels ---
+L_ = dict(fontsize=8, color="black", arrowprops=dict(arrowstyle="-", color="0.45", lw=0.6))
+ax.annotate("Elongation\nzone", xy=(c0-4, 14), xytext=(-10, 14), va="center", ha="right", **L_)
+ax.annotate("Meristem", xy=(c0-4, 32), xytext=(-10, 32), va="center", ha="right", **L_)
+ax.annotate("QC", xy=(mc, mr), xytext=(-10, mr), va="center", ha="right", fontsize=8, color="lime",
+            arrowprops=dict(arrowstyle="-", color="lime", lw=0.6))
+ax.annotate("Columella\n/ root cap", xy=(c0, r_qc+2), xytext=(-10, r_qc+3), va="center", ha="right", **L_)
+ax.annotate("Stele", xy=(c0, 20), xytext=(C+5, 20), va="center", **L_)
+ax.annotate("Cortex", xy=(c0+3, 24), xytext=(C+5, 24), va="center", **L_)
+ax.annotate("Epidermis", xy=(c0+4, 28), xytext=(C+5, 28), va="center", **L_)
+
+# --- demo bend arrow at the tip (placement check for the JS version) ---
+ax.annotate("", xy=(c0-3.5, R+1.5), xytext=(c0, R+1.5), arrowprops=dict(arrowstyle="->", color="#0088bb", lw=2.2))
+ax.text(c0-1.7, R+3, "bends toward\nlower side", color="#0088bb", fontsize=7, ha="center", va="top")
+
+ax.set_xlim(-12, C+9); ax.set_ylim(R+5, -2)
+ax.set_title("Virtual Root — anatomy, auxin & reflux", fontsize=10)
 ax.set_xticks([]); ax.set_yticks([]); ax.set_xlabel("← radial →"); ax.set_ylabel("shoot → tip")
-fig.colorbar(im, ax=ax, fraction=0.05, pad=0.04, label="auxin (uM)")
-fig.tight_layout(); fig.savefig(__file__.replace("auxin_v2.py","auxin_v2.png"), dpi=130)
-print("saved auxin_v2.png")
+fig.colorbar(im, ax=ax, fraction=0.04, pad=0.02, label="auxin (uM)")
+fig.tight_layout(); fig.savefig(__file__.replace("auxin_v2.py","auxin_v2_annotated.png"), dpi=130)
+fig.savefig(__file__.replace("auxin_v2.py","auxin_v2.png"), dpi=130)
+print("saved auxin_v2_annotated.png")
