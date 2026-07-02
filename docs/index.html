@@ -33,6 +33,8 @@
   .legend { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--muted); margin-top:10px; }
   .bar { height:12px; width:140px; border-radius:3px;
          background:linear-gradient(90deg,#000004,#3b0f70,#8c2981,#de4968,#fe9f6d,#fcfdbf); }
+  .probe { margin-top:8px; font-size:12px; color:var(--green-l); background:var(--panel);
+           border:1px solid #24332a; border-radius:6px; padding:6px 10px; min-height:30px; }
   footer { max-width:980px; margin:0 auto; padding:0 20px 40px; color:var(--muted); font-size:13px; }
   footer a { color:var(--green-l); } code { background:#0b0f0a; padding:1px 5px; border-radius:4px; }
 </style>
@@ -49,7 +51,9 @@
     <canvas id="root" aria-label="auxin distribution in a model root tip"></canvas>
     <div class="axis">shoot end ↑ &nbsp;·&nbsp; ↓ root tip</div>
     <div id="maxinfo"></div>
-    <div class="legend"><span>low</span><span class="bar"></span><span>high auxin</span></div>
+    <div class="legend"><span>0</span><span class="bar"></span><span id="legmax">µM</span></div>
+    <div id="clock" class="axis"></div>
+    <div id="probe" class="probe">hover / tap a cell to inspect it</div>
   </div>
 
   <div class="panel">
@@ -82,10 +86,12 @@
     <label class="check"><input type="checkbox" id="gravity"> Gravitropism: bias columella PIN to the lower side</label>
     <label class="check"><input type="checkbox" id="labels" checked> Show anatomy labels</label>
     <label class="check"><input type="checkbox" id="arrows" checked> Show auxin-flux arrows</label>
+    <label class="check"><input type="checkbox" id="dii"> DII-VENUS view (bright = low auxin, as under the microscope)</label>
     <div class="row">
       <button id="pause">Pause</button>
       <button id="reset">Reset auxin</button>
       <button id="png">Save PNG</button>
+      <button id="share">Copy share link</button>
     </div>
     <p style="color:var(--muted);font-size:12px;margin:14px 0 0">
       Try a <b>preset</b>, then watch it converge. <b>Gravistimulate</b> to redistribute auxin

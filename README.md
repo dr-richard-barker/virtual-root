@@ -39,6 +39,12 @@ A dependency-free browser app running the v2 model, with:
 - **Presets:** Wild type · Gravistimulate · **PIN2 mutant** · **aux1 mutant** · No decay.
 - **Animated gravitropism** — auxin redistributes to the lower side, with a live bending indicator.
 - Live sliders (PIN, AUX1, QC production, decay) and **Save PNG** export.
+- **DII-VENUS compare view** — invert the display (bright = low auxin) to eyeball the
+  model against real confocal imaging (see [SPEC.md §8](SPEC.md)).
+- **Hover / tap to probe** any cell — tissue, auxin (µM), and PIN/AUX1 status.
+- A **µM colour scale**, a **simulated-time clock**, and a **steady-state** indicator.
+- **Shareable links** — the button copies a URL encoding the current scenario, so you can
+  send "open this exact setup" or embed a specific preset.
 
 ### What makes it work
 1. Separate cell + wall compartments with per-membrane-side influx/efflux permeabilities.
