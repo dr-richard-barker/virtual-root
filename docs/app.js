@@ -27,7 +27,7 @@ const ef_up=new Float64Array(N), ef_dn=new Float64Array(N), ef_lf=new Float64Arr
 const pin_in=new Float64Array(N), prod=new Float64Array(N);
 let kDecay = 0.0012;
 const params = { EF_PIN:16, IN_AUX1:42, P_qc:0.025, k:0.0012, gravity:false, pin2ko:false, aux1ko:false,
-                 labels:true, arrows:true, dii:false };
+                 pin37:1, labels:true, arrows:true, dii:false };  // pin37 = columella PIN3/7 level (1 g = 1; µG < 1)
 
 function rebuild(){
   kDecay = params.k; converged=false;
@@ -41,7 +41,7 @@ function rebuild(){
     if(rootward) ed=P;
     if(shootward && !params.pin2ko) eu=P;
     if(m.epi[i]&&r>=r_mer){ if(c<c0) er=P; else if(c>c0) el=P; }
-    if(m.col[i]){ eu=ed=el=er=P; if(params.gravity){ el=P*1.6; er=P*0.4; } }
+    if(m.col[i]){ const cp=P*params.pin37; eu=ed=el=er=cp; if(params.gravity){ el=cp*1.6; er=cp*0.4; } }  // PIN3/7 (columella) — low in µG
     ef_up[i]=eu; ef_dn[i]=ed; ef_lf[i]=el; ef_rt[i]=er;
     const hasAux1=(m.epi[i]||m.lrc[i]||m.col[i]||m.qc[i]||(m.cortex[i]&&m.tip[i])) && !params.aux1ko;
     pin_in[i]=hasAux1?params.IN_AUX1:IN_BASE;
@@ -138,7 +138,8 @@ function render(){
   const atQC = mi>=0 && (mi/C|0)>=r_qc-1 && Math.abs(mi%C-c0)<=2;
   document.getElementById('maxinfo').textContent =
     (mi>=0?`auxin max ${max.toFixed(1)} µM at the ${atQC?'QC ✓':'row '+(mi/C|0)}`:'') +
-    (params.gravity?` · gravistimulated (${(Math.abs(asym)*100).toFixed(0)}%)`:'');
+    (params.gravity?` · gravistimulated (${(Math.abs(asym)*100).toFixed(0)}%)`:'') +
+    (params.pin37<0.5?' · µG: PIN3/7 low → auxin confined':'');
   document.getElementById('legmax').textContent = max.toFixed(1)+' µM';
   document.getElementById('clock').textContent =
     `t = ${(simTime/60).toFixed(1)} min` + (converged?' · steady state ✓':' · settling…') +
@@ -163,28 +164,31 @@ cv.addEventListener('pointermove', e=>{ const rect=cv.getBoundingClientRect();
   } else probeEl.textContent='hover / tap a cell to inspect it'; });
 
 // ---- presets ----
+const B={EF_PIN:16,IN_AUX1:42,P_qc:0.025,k:0.0012,gravity:false,pin2ko:false,aux1ko:false,pin37:1};
 const PRESETS={
-  wt:{EF_PIN:16,IN_AUX1:42,P_qc:0.025,k:0.0012,gravity:false,pin2ko:false,aux1ko:false},
-  grav:{EF_PIN:16,IN_AUX1:42,P_qc:0.025,k:0.0012,gravity:true,pin2ko:false,aux1ko:false},
-  pin2:{EF_PIN:16,IN_AUX1:42,P_qc:0.025,k:0.0012,gravity:false,pin2ko:true,aux1ko:false},
-  aux1:{EF_PIN:16,IN_AUX1:42,P_qc:0.025,k:0.0012,gravity:false,pin2ko:false,aux1ko:true},
-  nodecay:{EF_PIN:16,IN_AUX1:42,P_qc:0.025,k:0.0005,gravity:false,pin2ko:false,aux1ko:false},
+  wt:{...B},
+  grav:{...B,gravity:true},
+  ug:{...B,pin37:0.15},                         // Spaceflight (µG): CARA/OSD-120 PIN3/7 suppressed
+  pin2:{...B,pin2ko:true},
+  aux1:{...B,aux1ko:true},
+  nodecay:{...B,k:0.0005},
 };
 function syncDOM(){
   document.getElementById('pin').value=params.EF_PIN;   document.getElementById('pinv').textContent=params.EF_PIN;
   document.getElementById('aux1').value=params.IN_AUX1; document.getElementById('aux1v').textContent=params.IN_AUX1;
   document.getElementById('prodqc').value=params.P_qc;  document.getElementById('prodqcv').textContent=params.P_qc;
   document.getElementById('decay').value=params.k;      document.getElementById('decayv').textContent=params.k;
+  document.getElementById('pin37').value=Math.round(params.pin37*100); document.getElementById('pin37v').textContent=Math.round(params.pin37*100)+'%';
   document.getElementById('gravity').checked=params.gravity; document.getElementById('dii').checked=params.dii;
 }
 function setPreset(name){ Object.assign(params,PRESETS[name]); syncDOM(); rebuild(); reset(); }
 
 // ---- shareable URL state ----
 function encodeState(){ const p=params;
-  return `p=${p.EF_PIN}&a=${p.IN_AUX1}&q=${p.P_qc}&k=${p.k}&g=${+p.gravity}&m2=${+p.pin2ko}&m1=${+p.aux1ko}&d=${+p.dii}`; }
+  return `p=${p.EF_PIN}&a=${p.IN_AUX1}&q=${p.P_qc}&k=${p.k}&c=${p.pin37}&g=${+p.gravity}&m2=${+p.pin2ko}&m1=${+p.aux1ko}&d=${+p.dii}`; }
 function applyState(str){ const u=new URLSearchParams(str); if(!u.has('p')) return false;
   const n=(k,d)=>u.has(k)?+u.get(k):d;
-  params.EF_PIN=n('p',16); params.IN_AUX1=n('a',42); params.P_qc=n('q',0.025); params.k=n('k',0.0012);
+  params.EF_PIN=n('p',16); params.IN_AUX1=n('a',42); params.P_qc=n('q',0.025); params.k=n('k',0.0012); params.pin37=n('c',1);
   params.gravity=n('g',0)===1; params.pin2ko=n('m2',0)===1; params.aux1ko=n('m1',0)===1; params.dii=n('d',0)===1;
   syncDOM(); return true; }
 
@@ -193,6 +197,9 @@ function bind(id,key){ const el=document.getElementById(id),out=document.getElem
   const set=()=>{ params[key]=parseFloat(el.value); if(out)out.textContent=params[key]; rebuild(); };
   el.addEventListener('input',set); set(); }
 bind('pin','EF_PIN'); bind('aux1','IN_AUX1'); bind('prodqc','P_qc'); bind('decay','k');
+{ const el=document.getElementById('pin37'), out=document.getElementById('pin37v');
+  const set=()=>{ params.pin37=+el.value/100; out.textContent=el.value+'%'; rebuild(); };
+  el.addEventListener('input',set); set(); }
 document.getElementById('gravity').addEventListener('change',e=>{params.gravity=e.target.checked;rebuild();});
 document.getElementById('dii').addEventListener('change',e=>{params.dii=e.target.checked;});
 document.getElementById('labels').addEventListener('change',e=>params.labels=e.target.checked);

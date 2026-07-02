@@ -45,6 +45,11 @@ A dependency-free browser app running the v2 model, with:
 - A **µM colour scale**, a **simulated-time clock**, and a **steady-state** indicator.
 - **Shareable links** — the button copies a URL encoding the current scenario, so you can
   send "open this exact setup" or embed a specific preset.
+- **🛰️ Spaceflight (µG) mode** — a **PIN3/7 (columella) level** slider + preset that lowers
+  columella redistribution to reproduce the ISS **CARA / OSD-120** finding: suppressed
+  PIN3/PIN7 → **auxin confined to the QC**. In the model, dropping PIN3/7 to ~15% raises
+  QC-column auxin ~40% and flips the QC:lateral-cap balance from 0.82 → 1.16 — a live,
+  shareable demonstration of the spaceflight root phenotype for reanalysis/manuscript work.
 
 ### What makes it work
 1. Separate cell + wall compartments with per-membrane-side influx/efflux permeabilities.

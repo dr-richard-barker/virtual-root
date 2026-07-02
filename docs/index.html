@@ -61,6 +61,7 @@
     <div class="presets">
       <button data-preset="wt">Wild type</button>
       <button data-preset="grav">Gravistimulate</button>
+      <button data-preset="ug">🛰️ Spaceflight (µG)</button>
       <button data-preset="pin2">PIN2 mutant</button>
       <button data-preset="aux1">aux1 mutant</button>
       <button data-preset="nodecay">No decay</button>
@@ -83,6 +84,10 @@
       <label>Auxin decay (1/s) <b id="decayv"></b></label>
       <input type="range" id="decay" min="0.0005" max="0.005" step="0.0005" value="0.0012">
     </div>
+    <div class="ctrl">
+      <label>PIN3/7 level — columella (lower = microgravity) <b id="pin37v"></b></label>
+      <input type="range" id="pin37" min="0" max="100" step="5" value="100">
+    </div>
     <label class="check"><input type="checkbox" id="gravity"> Gravitropism: bias columella PIN to the lower side</label>
     <label class="check"><input type="checkbox" id="labels" checked> Show anatomy labels</label>
     <label class="check"><input type="checkbox" id="arrows" checked> Show auxin-flux arrows</label>
@@ -95,8 +100,10 @@
     </div>
     <p style="color:var(--muted);font-size:12px;margin:14px 0 0">
       Try a <b>preset</b>, then watch it converge. <b>Gravistimulate</b> to redistribute auxin
-      to the lower side (the start of root bending); <b>PIN2 mutant</b> to break the return flow;
-      <b>aux1 mutant</b> to lose the tip trap. The white arrows trace the auxin <b>reflux loop</b>.
+      to the lower side (the start of root bending); <b>🛰️ Spaceflight (µG)</b> lowers columella
+      <b>PIN3/7</b> — as seen in the CARA / OSD-120 ISS root transcriptome — so auxin becomes
+      <b>confined to the QC</b>. <b>PIN2 / aux1 mutant</b> break the return flow / tip trap. The
+      white arrows trace the auxin <b>reflux loop</b>.
     </p>
   </div>
 </main>
