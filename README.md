@@ -45,6 +45,11 @@ A dependency-free browser app running the v2 model, with:
 - A **µM colour scale**, a **simulated-time clock**, and a **steady-state** indicator.
 - **Shareable links** — the button copies a URL encoding the current scenario, so you can
   send "open this exact setup" or embed a specific preset.
+- **Confocal-style rendering** — a cell-wall / membrane channel, inset cells, and a depth
+  vignette make the root read like a two-channel confocal section (all procedural — no
+  third-party images, so the tool stays CC0).
+- **Gravistimulation turns the "plate" 90°** — selecting gravity rotates the root to
+  horizontal (as you'd turn an agar plate), while auxin redistributes to the lower side.
 - **🛰️ Spaceflight (µG) mode** — a **PIN3/7 (columella) level** slider + preset that lowers
   columella redistribution to reproduce the ISS **CARA / OSD-120** finding: suppressed
   PIN3/PIN7 → **auxin confined to the QC**. In the model, dropping PIN3/7 to ~15% raises

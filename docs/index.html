@@ -14,7 +14,13 @@
   .sub { color:var(--muted); margin:0 0 6px; }
   main { display:flex; flex-wrap:wrap; gap:24px; max-width:980px; margin:0 auto; padding:12px 20px 40px; }
   .stage { flex:0 0 auto; text-align:center; }
-  canvas { background:#0b0f0a; border:1px solid #24332a; border-radius:8px; image-rendering:pixelated; }
+  .frame { display:flex; align-items:center; justify-content:center; width:360px; height:648px;
+           transition:width .55s ease, height .55s ease; }
+  .frame.grav { width:648px; height:360px; }
+  canvas { background:#050805; border:1px solid #24332a; border-radius:10px; image-rendering:pixelated;
+           box-shadow:0 0 22px rgba(120,60,150,.28); transition:transform .55s ease, box-shadow .4s ease; }
+  #root.grav { transform:rotate(90deg); box-shadow:0 0 26px rgba(60,150,220,.30); }
+  #gravnote { color:#39c6ff; font-size:11px; }
   .axis { color:var(--muted); font-size:12px; margin-top:6px; }
   #maxinfo { color:var(--green-l); font-size:13px; min-height:18px; margin-top:4px; }
   .panel { flex:1 1 320px; background:var(--panel); border:1px solid #24332a; border-radius:10px; padding:16px 18px; }
@@ -48,8 +54,8 @@
 
 <main>
   <div class="stage">
-    <canvas id="root" aria-label="auxin distribution in a model root tip"></canvas>
-    <div class="axis">shoot end ↑ &nbsp;·&nbsp; ↓ root tip</div>
+    <div class="frame" id="frame"><canvas id="root" aria-label="auxin distribution in a model root tip"></canvas></div>
+    <div class="axis">shoot end ↑ &nbsp;·&nbsp; ↓ root tip &nbsp;<span id="gravnote"></span></div>
     <div id="maxinfo"></div>
     <div class="legend"><span>0</span><span class="bar"></span><span id="legmax">µM</span></div>
     <div id="clock" class="axis"></div>

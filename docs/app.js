@@ -81,6 +81,7 @@ function ramp(stops,t){ t=Math.pow(Math.max(0,Math.min(1,t)),GAMMA); const x=t*(
 
 // ---- canvas ----
 const cv=document.getElementById('root'), ctx=cv.getContext('2d');
+const frameEl=document.getElementById('frame'), gravnote=document.getElementById('gravnote');
 const PX=11, OX=64, OY=10, PADR=92, PADB=48;
 cv.width=OX+C*PX+PADR; cv.height=OY+R*PX+PADB;
 const cx=c=>OX+c*PX+PX/2, cy=r=>OY+r*PX+PX/2;
@@ -106,8 +107,14 @@ function render(){
   curMax=max;
   ctx.fillStyle='#0b0f0a'; ctx.fillRect(0,0,cv.width,cv.height);
   const stops = params.dii ? VENUS : MAGMA;
+  const WALL = params.dii ? '#20122a' : '#2c0f20';                 // cell-wall / membrane channel (PI-like)
   for(let r=0;r<R;r++) for(let c=0;c<C;c++){ const i=r*C+c; if(!active[i])continue;
-    const t=a[i]/max; ctx.fillStyle=ramp(stops, params.dii ? 1-t : t); ctx.fillRect(OX+c*PX,OY+r*PX,PX,PX); }
+    const x=OX+c*PX, y=OY+r*PX, t=a[i]/max;
+    ctx.fillStyle=WALL; ctx.fillRect(x,y,PX,PX);                    // draw wall, then inset the reporter
+    ctx.fillStyle=ramp(stops, params.dii?1-t:t); ctx.fillRect(x+1,y+1,PX-2,PX-2); }
+  const gX=OX+C*PX/2, gY=OY+R*PX/2, vg=ctx.createRadialGradient(gX,gY,R*PX*0.26,gX,gY,R*PX*0.62);
+  vg.addColorStop(0,'rgba(0,0,0,0)'); vg.addColorStop(1,'rgba(0,0,0,0.42)');   // confocal depth
+  ctx.fillStyle=vg; ctx.fillRect(0,0,cv.width,cv.height);
 
   if(params.arrows){
     for(let r=2;r<R;r+=3) for(let c=1;c<C;c+=2){ const i=r*C+c; if(!active[i])continue;
@@ -144,6 +151,9 @@ function render(){
   document.getElementById('clock').textContent =
     `t = ${(simTime/60).toFixed(1)} min` + (converged?' · steady state ✓':' · settling…') +
     (params.dii?' · DII-VENUS view (bright = low auxin)':'');
+  // gravistimulation: turn the "plate" 90° (root reorients relative to gravity)
+  if(frameEl){ frameEl.classList.toggle('grav', params.gravity); cv.classList.toggle('grav', params.gravity); }
+  if(gravnote) gravnote.textContent = params.gravity ? '· plate turned 90° (gravistimulated)' : '';
 }
 
 // ---- animation ----
