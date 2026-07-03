@@ -55,9 +55,15 @@ A dependency-free browser app running the v2 model, with:
   runs 0 % → 10 % → 21 % → 36 % → 41 %. See `gravity_series.py` + `asymmetry_curve.png`.
 - **🛰️ Spaceflight (µG) mode** — a **PIN3/7 (columella) level** slider + preset that lowers
   columella redistribution to reproduce the ISS **CARA / OSD-120** finding: suppressed
-  PIN3/PIN7 → **auxin confined to the QC**. In the model, dropping PIN3/7 to ~15% raises
-  QC-column auxin ~40% and flips the QC:lateral-cap balance from 0.82 → 1.16 — a live,
-  shareable demonstration of the spaceflight root phenotype for reanalysis/manuscript work.
+  PIN3/PIN7 → **auxin confined to the QC** with **no lateral bias**. In the model, dropping
+  PIN3/7 to ~15% raises QC-column auxin ~40% and flips the QC:lateral-cap balance from
+  0.82 → 1.16 — a live, shareable demonstration of the spaceflight root phenotype.
+  **What it predicts, and what the flight data show:** with no preferred side the root keeps
+  growing but **loses a consistent direction**. Re-measured CARA-lineage images confirm this —
+  root-angle **dispersion rises in spaceflight** (OSD-121: 51.2° vs 45.3° on the ground,
+  *p* < 0.0001) — while the apparent size drop is largely an imaging-calibration artifact
+  (area *p* = 0.30) and roots are *not* consistently short-and-fat. Loss of **directional
+  organisation**, not a shape change, is the validated read-out.
 
 ### What makes it work
 1. Separate cell + wall compartments with per-membrane-side influx/efflux permeabilities.
