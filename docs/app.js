@@ -27,7 +27,7 @@ const ef_up=new Float64Array(N), ef_dn=new Float64Array(N), ef_lf=new Float64Arr
 const pin_in=new Float64Array(N), prod=new Float64Array(N);
 let kDecay = 0.0012;
 const params = { EF_PIN:16, IN_AUX1:42, P_qc:0.025, k:0.0012, gravity:false, pin2ko:false, aux1ko:false,
-                 pin37:1, labels:true, arrows:true, dii:false };  // pin37 = columella PIN3/7 level (1 g = 1; µG < 1)
+                 pin37:1, gLevel:1, labels:true, arrows:true, dii:false };  // pin37 = PIN3/7 level; gLevel = gravity (g)
 
 function rebuild(){
   kDecay = params.k; converged=false;
@@ -41,7 +41,8 @@ function rebuild(){
     if(rootward) ed=P;
     if(shootward && !params.pin2ko) eu=P;
     if(m.epi[i]&&r>=r_mer){ if(c<c0) er=P; else if(c>c0) el=P; }
-    if(m.col[i]){ const cp=P*params.pin37; eu=ed=el=er=cp; if(params.gravity){ el=cp*1.6; er=cp*0.4; } }  // PIN3/7 (columella) — low in µG
+    if(m.col[i]){ const cp=P*params.pin37; eu=ed=el=er=cp;                     // PIN3/7 (columella) — low in µG
+      if(params.gravity){ const b=Math.min(0.9,0.6*Math.tanh(params.gLevel)/0.7616); el=cp*(1+b); er=cp*(1-b); } }  // bias scales with gravity level
     ef_up[i]=eu; ef_dn[i]=ed; ef_lf[i]=el; ef_rt[i]=er;
     const hasAux1=(m.epi[i]||m.lrc[i]||m.col[i]||m.qc[i]||(m.cortex[i]&&m.tip[i])) && !params.aux1ko;
     pin_in[i]=hasAux1?params.IN_AUX1:IN_BASE;
@@ -145,7 +146,7 @@ function render(){
   const atQC = mi>=0 && (mi/C|0)>=r_qc-1 && Math.abs(mi%C-c0)<=2;
   document.getElementById('maxinfo').textContent =
     (mi>=0?`auxin max ${max.toFixed(1)} µM at the ${atQC?'QC ✓':'row '+(mi/C|0)}`:'') +
-    (params.gravity?` · gravistimulated (${(Math.abs(asym)*100).toFixed(0)}%)`:'') +
+    (params.gravity?` · ${params.gLevel}g (asymmetry ${(Math.abs(asym)*100).toFixed(0)}%)`:'') +
     (params.pin37<0.5?' · µG: PIN3/7 low → auxin confined':'');
   document.getElementById('legmax').textContent = max.toFixed(1)+' µM';
   document.getElementById('clock').textContent =
@@ -174,10 +175,13 @@ cv.addEventListener('pointermove', e=>{ const rect=cv.getBoundingClientRect();
   } else probeEl.textContent='hover / tap a cell to inspect it'; });
 
 // ---- presets ----
-const B={EF_PIN:16,IN_AUX1:42,P_qc:0.025,k:0.0012,gravity:false,pin2ko:false,aux1ko:false,pin37:1};
+const B={EF_PIN:16,IN_AUX1:42,P_qc:0.025,k:0.0012,gravity:false,pin2ko:false,aux1ko:false,pin37:1,gLevel:1};
 const PRESETS={
   wt:{...B},
-  grav:{...B,gravity:true},
+  grav:{...B,gravity:true,gLevel:1},            // Earth 1 g
+  moon:{...B,gravity:true,gLevel:0.16},         // partial gravity
+  mars:{...B,gravity:true,gLevel:0.38},
+  hyper:{...B,gravity:true,gLevel:2},           // hypergravity
   ug:{...B,pin37:0.15},                         // Spaceflight (µG): CARA/OSD-120 PIN3/7 suppressed
   pin2:{...B,pin2ko:true},
   aux1:{...B,aux1ko:true},
@@ -195,10 +199,10 @@ function setPreset(name){ Object.assign(params,PRESETS[name]); syncDOM(); rebuil
 
 // ---- shareable URL state ----
 function encodeState(){ const p=params;
-  return `p=${p.EF_PIN}&a=${p.IN_AUX1}&q=${p.P_qc}&k=${p.k}&c=${p.pin37}&g=${+p.gravity}&m2=${+p.pin2ko}&m1=${+p.aux1ko}&d=${+p.dii}`; }
+  return `p=${p.EF_PIN}&a=${p.IN_AUX1}&q=${p.P_qc}&k=${p.k}&c=${p.pin37}&gl=${p.gLevel}&g=${+p.gravity}&m2=${+p.pin2ko}&m1=${+p.aux1ko}&d=${+p.dii}`; }
 function applyState(str){ const u=new URLSearchParams(str); if(!u.has('p')) return false;
   const n=(k,d)=>u.has(k)?+u.get(k):d;
-  params.EF_PIN=n('p',16); params.IN_AUX1=n('a',42); params.P_qc=n('q',0.025); params.k=n('k',0.0012); params.pin37=n('c',1);
+  params.EF_PIN=n('p',16); params.IN_AUX1=n('a',42); params.P_qc=n('q',0.025); params.k=n('k',0.0012); params.pin37=n('c',1); params.gLevel=n('gl',1);
   params.gravity=n('g',0)===1; params.pin2ko=n('m2',0)===1; params.aux1ko=n('m1',0)===1; params.dii=n('d',0)===1;
   syncDOM(); return true; }
 

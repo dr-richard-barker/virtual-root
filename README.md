@@ -50,6 +50,9 @@ A dependency-free browser app running the v2 model, with:
   third-party images, so the tool stays CC0).
 - **Gravistimulation turns the "plate" 90°** — selecting gravity rotates the root to
   horizontal (as you'd turn an agar plate), while auxin redistributes to the lower side.
+- **Gravity-level presets — µG · Moon (0.16 g) · Mars (0.38 g) · Earth (1 g) · 2 g** — the
+  columella PIN bias scales with gravity (saturating), so the lower-side auxin asymmetry
+  runs 0 % → 10 % → 21 % → 36 % → 41 %. See `gravity_series.py` + `asymmetry_curve.png`.
 - **🛰️ Spaceflight (µG) mode** — a **PIN3/7 (columella) level** slider + preset that lowers
   columella redistribution to reproduce the ISS **CARA / OSD-120** finding: suppressed
   PIN3/PIN7 → **auxin confined to the QC**. In the model, dropping PIN3/7 to ~15% raises
